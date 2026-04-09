@@ -268,30 +268,54 @@ async fn main() {
 
     // --- Plex orchestration ---
     if !config.no_manage {
-        println!("  {} {}", "→".bold().cyan(), "stopping Plex Media Server...");
+        println!("  {} {}", "→".bold().cyan(), "stopping Plex processes...");
         if cfg!(windows) {
-            let _ = std::process::Command::new("taskkill")
-                .args(["/F", "/IM", "Plex Media Server.exe"])
-                .stdout(std::process::Stdio::null())
-                .stderr(std::process::Stdio::null())
-                .status();
+            for proc in &["Plex Media Server.exe", "PlexScriptHost.exe", "Plex Tuner Service.exe"] {
+                let _ = std::process::Command::new("taskkill")
+                    .args(["/F", "/IM", proc])
+                    .stdout(std::process::Stdio::null())
+                    .stderr(std::process::Stdio::null())
+                    .status();
+            }
         } else {
-            let _ = std::process::Command::new("pkill")
-                .args(["-f", "Plex Media Server"])
-                .stdout(std::process::Stdio::null())
-                .stderr(std::process::Stdio::null())
-                .status();
+            for pattern in &["Plex Media Server", "PlexScriptHost", "Plex Tuner Service"] {
+                let _ = std::process::Command::new("pkill")
+                    .args(["-f", pattern])
+                    .stdout(std::process::Stdio::null())
+                    .stderr(std::process::Stdio::null())
+                    .status();
+            }
         }
         tokio::time::sleep(std::time::Duration::from_secs(2)).await;
     }
 
     // Bind proxy port
     let addr = SocketAddr::from(([0, 0, 0, 0], config.listen_port));
-    let listener = TcpListener::bind(addr).await.unwrap_or_else(|_| {
-        eprintln!("{} failed to bind port {} — is something else using it?",
-            "FATAL:".bold().red(), config.listen_port);
-        std::process::exit(1);
-    });
+    // Retry bind a few times — the port may take a moment to release after killing Plex
+    let mut listener = None;
+    for attempt in 0..10 {
+        match TcpListener::bind(addr).await {
+            Ok(l) => { listener = Some(l); break; }
+            Err(_) if attempt < 9 => {
+                if attempt == 0 {
+                    print!("  {} waiting for port {}...", "→".bold().cyan(), config.listen_port);
+                } else {
+                    print!(".");
+                }
+                tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            }
+            Err(_) => {
+                println!();
+                eprintln!("{} failed to bind port {} after 10 attempts — is something else using it?",
+                    "FATAL:".bold().red(), config.listen_port);
+                std::process::exit(1);
+            }
+        }
+    }
+    if listener.is_some() && listener.as_ref().is_some() {
+        // Print newline if we were printing dots
+    }
+    let listener = listener.unwrap();
 
     println!("  {} proxy bound to port {}", "→".bold().cyan(), config.listen_port.to_string().bold().green());
 
