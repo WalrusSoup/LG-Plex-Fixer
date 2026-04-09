@@ -1,0 +1,18 @@
+/target
+Cargo.lock
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS junk
+Thumbs.db
+.DS_Store
+*.stackdump
+
+# Build artifacts
+*.exe
+*.pdb

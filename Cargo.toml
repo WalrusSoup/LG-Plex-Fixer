@@ -1,0 +1,19 @@
+[package]
+name = "plex-http-proxy"
+version = "0.1.0"
+edition = "2021"
+description = "HTTP proxy for Plex that fixes broken HLS transcoding on LG webOS TVs by terminating TLS and re-transcoding with NVENC"
+license = "MIT"
+repository = "https://github.com/YOUR_USERNAME/plex-http-proxy"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", features = ["stream", "rustls-tls"], default-features = false }
+hyper = { version = "1", features = ["server", "http1"] }
+hyper-util = { version = "0.1", features = ["tokio"] }
+http-body-util = "0.1"
+bytes = "1"
+futures-util = "0.3"
+
+[profile.release]
+opt-level = 2
