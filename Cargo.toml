@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "HTTP proxy for Plex that fixes broken HLS transcoding on LG webOS TVs by terminating TLS and re-transcoding with NVENC"
 license = "MIT"
-repository = "https://github.com/YOUR_USERNAME/plex-http-proxy"
+repository = "https://github.com/WalrusSoup/LG-Plex-Fixer"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
