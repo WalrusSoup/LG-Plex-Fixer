@@ -1,12 +1,16 @@
 # lg-plex-fixer
 
-A Rust HTTP proxy that temporarily fixes Plex transcoding on LG webOS TVs.
+A Rust HTTP proxy that temporarily fixes Plex transcoding on LG webOS TVs. Fixes the following:
+
+- Unable to find client profile for device; platform=webOS, platformVersion=10.3.0, device=webOS 10.3.0
+- MEDIA_ELEMENT_ERROR \ MEDIA_FORMAT_ERROR
+- An unexpected playback problem has occurred
 
 ![LG TV Plex Issue](./lg-tv-plex-fix.jpg)
 
 ## What Happened
 
-LG or plex pushed an update that broke all my subtitled weaboo shit. Doesn't stream, throws MEDIA_ELEMENT_ERROR. Annoying. Unncessary.
+LG or plex pushed an update that broke all my subtitled weaboo shit. 
 
 ### Bug #1: TLS is cooked? Maybe?
 
