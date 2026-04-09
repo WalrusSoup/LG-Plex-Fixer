@@ -1,4 +1,4 @@
-# plex-http-proxy
+# lg-plex-fixer
 
 A Rust HTTP proxy that temporarily fixes Plex transcoding on LG webOS TVs.
 
@@ -45,7 +45,7 @@ Plex gates hardware transcoding behind Plex Pass. That's really stupid. This use
 ### Proxy
 
 ```
-LG TV (port 32400) --> [plex-http-proxy] --> Plex Media Server (port 32401)
+LG TV (port 32400) --> [lg-plex-fixer] --> Plex Media Server (port 32401)
                         plain HTTP            HTTPS (self-signed)
 ```
 
@@ -53,25 +53,17 @@ The proxy must be on port 32400. The TV hardcodes segment fetch URLs to whatever
 
 ### Steps
 
-1. **Build the proxy:**
+1. **Build the proxy** (or grab the exe from [Releases](https://github.com/WalrusSoup/LG-Plex-Fixer/releases)):
    ```
    cargo build --release
    ```
 
-2. **Stop Plex Media Server**
-
-3. **Start the proxy** (it grabs port 32400):
+2. **Run it:**
    ```
-   ./target/release/plex-http-proxy
+   ./target/release/lg-plex-fixer
    ```
 
-4. **Start Plex Media Server**
-
-5. **That's it.** The TV connects to the proxy on 32400 and gets picked up by our proxy. 
-
-
-### WINDOWS PEOPLE
-On Windows, you can use the included `start.bat` which automates steps 2-4. EZ PZ. Tested it on several shows and they worked.
+3. **That's it.** The proxy runs diagnostics, kills Plex, grabs port 32400, restarts Plex on 32401, and waits for connections. The TV connects to 32400 and gets picked up by our proxy. Use `--no-manage` if you want to handle Plex yourself.
 
 ### Configuration
 
@@ -99,7 +91,7 @@ For the morbidly curious, the webOS 10.2.2 Plex breakage has been documented acr
 
 ## This Is a Workaround
 
-Let's be very clear: **you should not need to run a custom transcoding proxy to watch TV on your TV.** LG or PLEX, please fix this. I just wanna watch weeb shit again.
+LG or PLEX, please fix this. I just wanna watch weeb shit again.
 
 ## License
 

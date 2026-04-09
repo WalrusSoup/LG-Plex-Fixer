@@ -8,7 +8,7 @@ REM
 REM  Edit the paths below if your install locations differ.
 REM ============================================================
 
-set PROXY_EXE=%~dp0target\release\plex-http-proxy.exe
+set PROXY_EXE=%~dp0target\release\lg-plex-fixer.exe
 set PLEX_EXE=C:\Program Files\Plex\Plex Media Server\Plex Media Server.exe
 
 echo Stopping Plex Media Server...
